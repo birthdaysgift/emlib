@@ -1,1 +1,1 @@
-Simple library for crating menus with alphanumeric display
+Simple library for creating menus with alphanumeric display
