@@ -24,7 +24,7 @@ struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuI
 	
 	// Initialize new_item
 	struct MenuItem *new_item = _menu_item_malloc();
-	new_item->text = (parent != NULL) ? _get_item_text(text) : text;
+	new_item->text = _get_item_text(text);
 	new_item->parent = parent;
 	new_item->prev = prev;
 	new_item->next = next;
@@ -124,17 +124,18 @@ void menu_next() {
 		if (current_item == bottom_item) {
 			top_item = bottom_item;
 			bottom_item = current_item = current_item->next;
-			
-			lcd_clear();
-			
-			lcd_set_cursor(0, 0);
-			lcd_puts(top_item->text);
-			
-			lcd_set_cursor(0, 1);
-			lcd_puts(bottom_item->text);
-			} else {
+			top_item->text[0] = ' ';
+			bottom_item->text[0] = '>';
+		} else {
 			current_item = current_item->next;
+			top_item->text[0] = ' ';
+			bottom_item->text[0] = '>';
 		}
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(top_item->text);
+		lcd_set_cursor(0, 1);
+		lcd_puts(bottom_item->text);
 	}
 }
 
@@ -146,17 +147,18 @@ void menu_prev() {
 		if (current_item == top_item) {
 			bottom_item = top_item;
 			top_item = current_item = current_item->prev;
-			
-			lcd_clear();
-			
-			lcd_set_cursor(0, 0);
-			lcd_puts(top_item->text);
-			
-			lcd_set_cursor(0, 1);
-			lcd_puts(bottom_item->text);
-			} else {
+			top_item->text[0] = '>';
+			bottom_item->text[0] = ' ';
+		} else {
 			current_item = current_item->prev;
+			top_item->text[0] = '>';
+			bottom_item->text[0] = ' ';
 		}
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(top_item->text);
+		lcd_set_cursor(0, 1);
+		lcd_puts(bottom_item->text);
 	}
 }
 
@@ -166,11 +168,12 @@ void menu_enter() {
 	extern struct MenuItem *current_item;
 
 	if (_menu_has_action())
-	current_item->action();
+		current_item->action();
 	
 	if (_menu_has_child())	{
 		current_item = current_item->first_child;
 		top_item = current_item;
+		top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();
@@ -192,6 +195,7 @@ void menu_escape() {
 	if (_menu_has_parent())	{
 		current_item = current_item->parent;
 		top_item = current_item;
+		top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();
@@ -212,6 +216,7 @@ void menu_finalize() {
 	extern struct MenuItem *current_item;
 	
 	top_item = current_item;
+	top_item->text[0] = '>';
 	bottom_item = current_item->next;
 	
 	lcd_clear();
@@ -252,36 +257,31 @@ int _menu_has_action() {
 
 char *_get_dir_text(char *source_text) {
 	int source_len = strlen(source_text);
-	int result_len = (source_len > 14) ? 16 : source_len+2;
+	int result_len = (source_len > 13) ? 16 : source_len+3;
 	char *result_text;
 	result_text = calloc(result_len, sizeof (char));
-	result_text[0] = '/';
-	for (int i = 1; i <= result_len-2; i++)
-	result_text[i] = source_text[i-1];
+	result_text[0] = ' ';
+	result_text[1] = '/';
+	for (int i = 2; i <= result_len-2; i++)
+		result_text[i] = source_text[i-2];
 	result_text[result_len-1] = '/';
 	return result_text;
 }
 
 char *_get_item_text(char *source_text) {
 	int source_len = strlen(source_text);
-	int result_len = (source_len > 15) ? 16 : source_len+1;
+	int result_len = (source_len > 14) ? 16 : source_len+2;
 	char *result_text;
 	result_text = calloc(result_len, sizeof (char));
-	result_text[0] = '/';
-	for (int i = 1; i <= result_len-1; i++)
-	result_text[i] = source_text[i-1];
+	result_text[0] = ' ';
+	result_text[1] = '/';
+	for (int i = 2; i <= result_len-1; i++)
+		result_text[i] = source_text[i-2];
 	return result_text;
 }
 
 char *_get_action_text(char *source_text) {
-	int source_len = strlen(source_text);
-	int result_len = (source_len > 15) ? 16 : source_len+1;
-	char *result_text;
-	result_text = calloc(result_len, sizeof (char));
-	result_text[0] = '/';
-	for (int i = 1; i <= result_len-1; i++)
-	result_text[i] = source_text[i-1];
-	return result_text;
+	return _get_item_text(source_text);
 }
 
 struct MenuItem *_menu_item_malloc() {
