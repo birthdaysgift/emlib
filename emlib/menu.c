@@ -20,7 +20,7 @@ struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuI
 	// Remember it. It will be next for the new_item
 	struct MenuItem *next = NULL;
 	if (prev != NULL && prev->next != NULL)
-	next = prev->next;
+		next = prev->next;
 	
 	// Initialize new_item
 	struct MenuItem *new_item = _menu_item_malloc();
@@ -33,18 +33,18 @@ struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuI
 
 	// Change links in previous and next items of the new_item
 	if (prev != NULL)
-	prev->next = new_item;
+		prev->next = new_item;
 	if (next != NULL)
-	next->prev = new_item;
+		next->prev = new_item;
 	
 	// Change link in the parent of the new_item
 	if (parent->first_child == NULL)
-	parent->first_child = new_item;
+		parent->first_child = new_item;
 	
 	// If new_item is first in the menu (have no parent and no items before it)
 	// set it as current_item
 	if (parent == NULL && prev == NULL)
-	current_item = new_item;
+		current_item = new_item;
 	
 	return new_item;
 }
@@ -53,7 +53,7 @@ struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuIt
 	// Remember it. It will be next for the new_dir
 	struct MenuItem *next = NULL;
 	if (prev != NULL && prev->next != NULL)
-	next = prev->next;
+		next = prev->next;
 	
 	// Initialize new_dir
 	struct MenuItem *new_dir = _menu_item_malloc();
@@ -66,18 +66,18 @@ struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuIt
 	
 	// Change links in previous and next items of the new_dir
 	if (prev != NULL)
-	prev->next = new_dir;
+		prev->next = new_dir;
 	if (next != NULL)
-	next->prev = new_dir;
+		next->prev = new_dir;
 	
 	// Change link in the parent of the new_dir
 	if (parent->first_child == NULL)
-	parent->first_child = new_dir;
+		parent->first_child = new_dir;
 	
 	// If new_item is first in the menu (have no parent and no items before it)
 	// set it as current_item
 	if (parent == NULL && prev == NULL)
-	current_item = new_dir;
+		current_item = new_dir;
 	
 	return new_dir;
 }
@@ -87,7 +87,7 @@ void (*action)()) {
 	// Remember it. It will be next for the new_item
 	struct MenuItem *next = NULL;
 	if (prev != NULL && prev->next != NULL)
-	next = prev->next;
+		next = prev->next;
 	
 	// Initialize new_item
 	struct MenuItem *new_item = _menu_item_malloc();
@@ -100,18 +100,18 @@ void (*action)()) {
 
 	// Change links in previous and next items of the new_item
 	if (prev != NULL)
-	prev->next = new_item;
+		prev->next = new_item;
 	if (next != NULL)
-	next->prev = new_item;
+		next->prev = new_item;
 	
 	// Change link in the parent of the new_item
 	if (parent->first_child == NULL)
-	parent->first_child = new_item;
+		parent->first_child = new_item;
 	
 	// If new_item is first in the menu (have no parent and no items before it)
 	// set it as current_item
 	if (parent == NULL && prev == NULL)
-	current_item = new_item;
+		current_item = new_item;
 	
 	return new_item;
 }
