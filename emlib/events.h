@@ -7,6 +7,9 @@ void menu_prev();
 void menu_enter();
 void menu_escape();
 
+void value_enter();
+void value_escape();
+
 int _menu_has_next();
 int _menu_has_prev();
 int _menu_has_parent();

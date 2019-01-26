@@ -27,6 +27,9 @@ void menu_init() {
 	top_item = NULL;
 	bottom_item = NULL;
 	current_item = NULL;
+	
+	extern int value_cursor_position;
+	value_cursor_position = 0;
 }
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {

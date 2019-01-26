@@ -12,6 +12,8 @@ struct MenuItem *top_item;
 struct MenuItem *bottom_item;
 struct MenuItem *current_item;
 
+int value_cursor_position;
+
 void menu_init();
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev);

@@ -1,5 +1,6 @@
 ﻿#define F_CPU 16000000
 
+#include <ctype.h>
 #include <stdint.h>
 #include <string.h>
 #include <util/delay.h>
@@ -7,6 +8,7 @@
 #include "events.h"
 #include "lcd.h"
 #include "menu.h"
+#include "menu_config.h"
 #include "utils.h"
 
 void button_pushed_event(char button_bit, volatile uint8_t *button_register,
@@ -93,6 +95,22 @@ void menu_enter() {
 		}
 		return;
 	}
+	
+	if (_menu_has_value()) {
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(current_item->text);
+		lcd_set_cursor(0, 1);
+		lcd_puts(current_item->value);
+		lcd_set_cursor(0, 1);
+		lcd_enable_cursor();
+		while(bit_status(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN) == 0) {};
+		while (1) {
+			button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, value_enter);
+			button_pushed_event(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN, value_escape);
+		}
+		return;
+	}
 }
 
 void menu_escape() {
@@ -114,6 +132,36 @@ void menu_escape() {
 			lcd_set_cursor(0, 1);
 			lcd_puts(bottom_item->text);
 		}
+	}
+}
+
+void value_enter() {
+	int display_row_size = 16;
+	extern int value_cursor_position;
+	value_cursor_position++;
+	while (1) {
+		if (value_cursor_position > display_row_size - 1)
+			value_cursor_position = 0;
+		if (isdigit(current_item->value[value_cursor_position])) {
+			lcd_set_cursor(value_cursor_position, 1);
+			break;
+		}
+		value_cursor_position++;
+	}
+}
+
+void value_escape() {
+	int display_row_size = 16;
+	extern int value_cursor_position;
+	value_cursor_position--;
+	while (1) {
+		if (value_cursor_position < 0)
+			value_cursor_position = display_row_size - 1;
+		if (isdigit(current_item->value[value_cursor_position])) {
+			lcd_set_cursor(value_cursor_position, 1);
+			break;
+		}
+		value_cursor_position--;
 	}
 }
 
