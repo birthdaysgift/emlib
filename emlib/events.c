@@ -71,8 +71,10 @@ void menu_enter() {
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
 
-	if (_menu_has_action())
-	current_item->action();
+	if (_menu_has_action()) {
+		current_item->action();
+		return;
+	}
 	
 	if (_menu_has_child())	{
 		current_item = current_item->first_child;
@@ -89,6 +91,7 @@ void menu_enter() {
 			lcd_set_cursor(0, 1);
 			lcd_puts(bottom_item->text);
 		}
+		return;
 	}
 }
 
