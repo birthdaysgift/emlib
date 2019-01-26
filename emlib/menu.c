@@ -148,7 +148,9 @@ void menu_finalize() {
 		lcd_puts(bottom_item->text);
 	}
 	
-	while (1) {
+	extern int menu_loop_running;
+	menu_loop_running = 1;
+	while (menu_loop_running) {
 		button_pushed_event(MENU_NEXT_BUTTON, &MENU_BUTTONS_PIN, menu_next);
 		button_pushed_event(MENU_PREV_BUTTON, &MENU_BUTTONS_PIN, menu_prev);
 		button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, menu_enter);

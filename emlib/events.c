@@ -105,7 +105,10 @@ void menu_enter() {
 		lcd_set_cursor(0, 1);
 		lcd_enable_cursor();
 		while(bit_status(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN) == 0) {};
-		while (1) {
+			
+		extern int value_loop_running;
+		value_loop_running = 1;
+		while (value_loop_running) {
 			button_pushed_event(MENU_NEXT_BUTTON, &MENU_BUTTONS_PIN, value_next);
 			button_pushed_event(MENU_PREV_BUTTON, &MENU_BUTTONS_PIN, value_prev);
 			button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, value_enter);

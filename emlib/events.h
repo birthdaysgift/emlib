@@ -1,5 +1,8 @@
 ﻿#include <stdint.h>
 
+int menu_loop_running;
+int value_loop_running;
+
 void button_pushed_event(char, volatile uint8_t *, void (*handler)(void));
 
 void menu_next();
