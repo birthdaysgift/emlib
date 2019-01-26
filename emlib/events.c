@@ -136,11 +136,10 @@ void menu_escape() {
 }
 
 void value_enter() {
-	int display_row_size = 16;
 	extern int value_cursor_position;
 	value_cursor_position++;
 	while (1) {
-		if (value_cursor_position > display_row_size - 1)
+		if (value_cursor_position > DISPLAY_ROW_SIZE - 1)
 			value_cursor_position = 0;
 		if (isdigit(current_item->value[value_cursor_position])) {
 			lcd_set_cursor(value_cursor_position, 1);
@@ -151,12 +150,11 @@ void value_enter() {
 }
 
 void value_escape() {
-	int display_row_size = 16;
 	extern int value_cursor_position;
 	value_cursor_position--;
 	while (1) {
 		if (value_cursor_position < 0)
-			value_cursor_position = display_row_size - 1;
+			value_cursor_position = DISPLAY_ROW_SIZE - 1;
 		if (isdigit(current_item->value[value_cursor_position])) {
 			lcd_set_cursor(value_cursor_position, 1);
 			break;

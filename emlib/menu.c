@@ -59,14 +59,13 @@ struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct Men
 }
 
 void _format_item_text(struct MenuItem *item) {
-	int display_row_size = 16;
 	int raw_text_len = strlen(item->text);
 	int i = 0;
 	int j = 0;
-	char *formatted_text = calloc(display_row_size, sizeof (char));
+	char *formatted_text = calloc(DISPLAY_ROW_SIZE, sizeof (char));
 	formatted_text[i++] = ' ';
 	formatted_text[i++] = (item->parent == NULL) ? item->text[j++] : '/';
-	while (i < display_row_size && j < raw_text_len)
+	while (i < DISPLAY_ROW_SIZE && j < raw_text_len)
 		formatted_text[i++] = item->text[j++];
 	int result_text_len = i;
 	item->text = calloc(result_text_len, sizeof (char));
@@ -76,9 +75,8 @@ void _format_item_text(struct MenuItem *item) {
 
 void _format_dir_text(struct MenuItem *item) {
 	_format_item_text(item);
-	int display_row_size = 16;
 	int item_text_len = strlen(item->text);
-	if (item_text_len == display_row_size) {
+	if (item_text_len == DISPLAY_ROW_SIZE) {
 		item->text[item_text_len-1] = '/';
 	} else {
 		// Add '/' in the end of item->text
