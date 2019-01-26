@@ -55,7 +55,7 @@ void menu_prev() {
 			top_item = current_item = current_item->prev;
 			top_item->text[0] = '>';
 			bottom_item->text[0] = ' ';
-			} else {
+		} else {
 			current_item = current_item->prev;
 			top_item->text[0] = '>';
 			bottom_item->text[0] = ' ';
@@ -106,6 +106,8 @@ void menu_enter() {
 		lcd_enable_cursor();
 		while(bit_status(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN) == 0) {};
 		while (1) {
+			button_pushed_event(MENU_NEXT_BUTTON, &MENU_BUTTONS_PIN, value_next);
+			button_pushed_event(MENU_PREV_BUTTON, &MENU_BUTTONS_PIN, value_prev);
 			button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, value_enter);
 			button_pushed_event(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN, value_escape);
 		}
@@ -133,6 +135,26 @@ void menu_escape() {
 			lcd_puts(bottom_item->text);
 		}
 	}
+}
+
+void value_next() {
+	extern int value_cursor_position;
+	current_item->value[value_cursor_position]--;
+	if (current_item->value[value_cursor_position] < '0')
+		current_item->value[value_cursor_position] = '9';
+	lcd_set_cursor(0, 1);
+	lcd_puts(current_item->value);
+	lcd_set_cursor(value_cursor_position, 1);	
+}
+
+void value_prev() {
+	extern int value_cursor_position;
+	current_item->value[value_cursor_position]++;
+	if (current_item->value[value_cursor_position] > '9')
+		current_item->value[value_cursor_position] = '0';
+	lcd_set_cursor(0, 1);
+	lcd_puts(current_item->value);
+	lcd_set_cursor(value_cursor_position, 1);
 }
 
 void value_enter() {
