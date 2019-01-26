@@ -17,22 +17,29 @@ void menu_init() {
 }
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {
-	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL);
+	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, NULL);
 	_format_item_text(item);
 	return item;
 }
 
 struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuItem *prev) {
-	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL);
+	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, NULL);
 	_format_dir_text(item);
 	return item;
 }
 
 struct MenuItem *menu_add_action(char *text, struct MenuItem *parent, struct MenuItem *prev,
 								 void (*action)()) {
-	struct MenuItem *item = _menu_init_item(text, parent, prev, action);
+	struct MenuItem *item = _menu_init_item(text, parent, prev, action, NULL);
 	_format_action_text(item);
 	return item;
+}
+
+struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct MenuItem *prev,
+								 char *value) {
+	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, value);
+	_format_item_text(item);
+	return item;									 
 }
 
 void _format_item_text(struct MenuItem *item) {
@@ -74,7 +81,7 @@ void _format_action_text(struct MenuItem *item) {
 }
 
 struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct MenuItem *prev,
-							     void (*action)()) {
+							     void (*action)(), char *value) {
 	// Remember it. It will be next for the new_item
 	struct MenuItem *next = NULL;
 	if (prev != NULL && prev->next != NULL)
@@ -87,6 +94,7 @@ struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct Men
 	new_item->prev = prev;
 	new_item->next = next;
 	new_item->action = action;
+	new_item->value = value;
 	new_item->first_child = NULL;
 
 	// Change links in previous and next items of the new_item
@@ -244,6 +252,11 @@ int _menu_has_child() {
 int _menu_has_action() {
 	extern struct MenuItem *current_item;
 	return current_item->action != NULL;
+}
+
+int _menu_has_value() {
+	extern struct MenuItem *current_item;
+	return current_item->value != NULL;
 }
 
 struct MenuItem *_menu_item_malloc() {

@@ -4,6 +4,7 @@
 	struct MenuItem *next;
 	struct MenuItem *first_child;
 	void (*action)();
+	char *value;
 	char *text;
 };
 
@@ -16,9 +17,10 @@ void menu_init();
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev);
 struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuItem *prev);
 struct MenuItem *menu_add_action(char *text, struct MenuItem *parent, struct MenuItem *prev, void (*action)());
+struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct MenuItem *prev, char *value);
 
 struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct MenuItem *prev,
-							     void (*action)());
+							     void (*action)(), char *value);
 							   
 void _format_item_text(struct MenuItem *item);
 void _format_dir_text(struct MenuItem *item);
@@ -36,5 +38,6 @@ int _menu_has_prev();
 int _menu_has_parent();
 int _menu_has_child();
 int _menu_has_action();
+int _menu_has_value();
 
 struct MenuItem *_menu_item_malloc();
