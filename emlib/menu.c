@@ -30,6 +30,9 @@ void menu_init() {
 	
 	extern int value_cursor_position;
 	value_cursor_position = 0;
+	
+	extern char *menu_password;
+	menu_password = NULL;
 }
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {
@@ -56,6 +59,11 @@ struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct Men
 	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, value);
 	_format_item_text(item);
 	return item;									 
+}
+
+void menu_set_password(char *password) {
+	extern char *menu_password;
+	menu_password = password;
 }
 
 void _format_item_text(struct MenuItem *item) {
@@ -146,6 +154,18 @@ void menu_finalize() {
 	if (bottom_item != NULL) {
 		lcd_set_cursor(0, 1);
 		lcd_puts(bottom_item->text);
+	}
+	
+	extern char *menu_password;
+	if (menu_password != NULL) {
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts("Password:");
+		lcd_set_cursor(0, 1);
+		lcd_puts("0000");
+		lcd_enable_cursor();
+		lcd_set_cursor(0, 1);
+		while (1) {};
 	}
 	
 	extern int menu_loop_running;
