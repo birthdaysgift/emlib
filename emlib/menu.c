@@ -1,10 +1,23 @@
 ﻿#include <stdlib.h>
 #include <string.h>
 
+#include "events.h"
 #include "lcd.h"
 #include "menu.h"
+#include "menu_config.h"
+#include "utils.h"
 
 void menu_init() {
+	clear_bit(MENU_ENTER_BUTTON, &MENU_BUTTONS_DDR);
+	clear_bit(MENU_NEXT_BUTTON, &MENU_BUTTONS_DDR);
+	clear_bit(MENU_PREV_BUTTON, &MENU_BUTTONS_DDR);
+	clear_bit(MENU_ESC_BUTTON, &MENU_BUTTONS_DDR);
+	
+	set_bit(MENU_ENTER_BUTTON, &MENU_BUTTONS_PORT);
+	set_bit(MENU_NEXT_BUTTON, &MENU_BUTTONS_PORT);
+	set_bit(MENU_PREV_BUTTON, &MENU_BUTTONS_PORT);
+	set_bit(MENU_ESC_BUTTON, &MENU_BUTTONS_PORT);
+	
 	lcd_init();
 	lcd_on();
 
@@ -132,6 +145,13 @@ void menu_finalize() {
 	if (bottom_item != NULL) {
 		lcd_set_cursor(0, 1);
 		lcd_puts(bottom_item->text);
+	}
+	
+	while (1) {
+		button_pushed_event(MENU_NEXT_BUTTON, &MENU_BUTTONS_PIN, menu_next);
+		button_pushed_event(MENU_PREV_BUTTON, &MENU_BUTTONS_PIN, menu_prev);
+		button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, menu_enter);
+		button_pushed_event(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN, menu_escape);
 	}
 }
 
