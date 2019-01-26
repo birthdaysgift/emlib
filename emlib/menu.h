@@ -12,7 +12,8 @@ struct MenuItem *top_item;
 struct MenuItem *bottom_item;
 struct MenuItem *current_item;
 
-char *menu_password;
+char *proper_password;
+char *current_password;
 
 int value_cursor_position;
 

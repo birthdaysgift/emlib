@@ -203,6 +203,102 @@ void value_escape() {
 	}
 }
 
+void password_next() {
+	extern int value_cursor_position;
+	extern char *current_password;
+	current_password[value_cursor_position]--;
+	if (current_password[value_cursor_position] < '0')
+		current_password[value_cursor_position] = '9';
+	lcd_set_cursor(0, 1);
+	lcd_puts(current_password);
+	lcd_set_cursor(value_cursor_position, 1);
+}
+
+void password_prev() {
+	extern int value_cursor_position;
+	extern char *current_password;
+	current_password[value_cursor_position]++;
+	if (current_password[value_cursor_position] > '9')
+		current_password[value_cursor_position] = '0';
+	lcd_set_cursor(0, 1);
+	lcd_puts(current_password);
+	lcd_set_cursor(value_cursor_position, 1);
+}
+
+void password_enter() {
+	extern char *current_password;
+	extern char *proper_password;
+	extern int value_cursor_position;
+	extern int value_loop_running;
+	value_cursor_position++;
+	while (1) {
+		if (value_cursor_position > strlen(current_password) - 1) {
+			if (strcmp(current_password, proper_password) == 0) {
+				value_cursor_position = 0;
+				value_loop_running = 0;
+				break;				
+			} else {
+				lcd_clear();
+				lcd_set_cursor(0, 0);
+				lcd_puts("Password:");
+				lcd_set_cursor(0, 1);
+				lcd_puts("wrong password");
+				lcd_disable_cursor();
+				_delay_ms(1000);
+				lcd_clear();
+				lcd_set_cursor(0, 0);
+				lcd_puts("Password:");
+				lcd_set_cursor(0, 1);
+				lcd_puts(current_password);
+				lcd_enable_cursor();
+				value_cursor_position--;
+				continue;
+			}
+		}
+		if (isdigit(current_password[value_cursor_position])) {
+			lcd_set_cursor(value_cursor_position, 1);
+			break;
+		}
+		value_cursor_position++;
+	}
+}
+
+void password_escape() {
+	extern int value_cursor_position;
+	extern char *current_password;
+	value_cursor_position--;
+	while (1) {
+		if (value_cursor_position < 0) {
+			if (strcmp(current_password, proper_password) == 0) {
+				value_cursor_position = 0;
+				value_loop_running = 0;
+				break;
+			} else {
+				lcd_clear();
+				lcd_set_cursor(0, 0);
+				lcd_puts("Password:");
+				lcd_set_cursor(0, 1);
+				lcd_puts("wrong password");
+				lcd_disable_cursor();
+				_delay_ms(1000);
+				lcd_clear();
+				lcd_set_cursor(0, 0);
+				lcd_puts("Password:");
+				lcd_set_cursor(0, 1);
+				lcd_puts(current_password);
+				lcd_enable_cursor();
+				value_cursor_position++;
+				continue;
+			}
+		}
+		if (isdigit(current_password[value_cursor_position])) {
+			lcd_set_cursor(value_cursor_position, 1);
+			break;
+		}
+		value_cursor_position--;
+	}
+}
+
 int _menu_has_next() {
 	extern struct MenuItem *current_item;
 	return current_item->next != NULL;

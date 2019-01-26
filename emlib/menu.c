@@ -31,8 +31,10 @@ void menu_init() {
 	extern int value_cursor_position;
 	value_cursor_position = 0;
 	
-	extern char *menu_password;
-	menu_password = NULL;
+	extern char *proper_password;
+	extern char *current_password;
+	proper_password = NULL;
+	current_password = "0000";	
 }
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {
@@ -62,8 +64,8 @@ struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct Men
 }
 
 void menu_set_password(char *password) {
-	extern char *menu_password;
-	menu_password = password;
+	extern char *proper_password;
+	proper_password = password;
 }
 
 void _format_item_text(struct MenuItem *item) {
@@ -138,6 +140,28 @@ struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct Men
 }
 
 void menu_finalize() {
+	extern char *proper_password;
+	extern char *current_password;
+	if (proper_password != NULL) {
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts("Password:");
+		lcd_set_cursor(0, 1);
+		lcd_puts(current_password);
+		lcd_enable_cursor();
+		lcd_set_cursor(0, 1);
+		
+		extern int value_loop_running;
+		value_loop_running = 1;
+		while (value_loop_running) {
+			button_pushed_event(MENU_NEXT_BUTTON, &MENU_BUTTONS_PIN, password_next);
+			button_pushed_event(MENU_PREV_BUTTON, &MENU_BUTTONS_PIN, password_prev);
+			button_pushed_event(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN, password_escape);
+			button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, password_enter);
+		};
+		lcd_disable_cursor();
+	}
+	
 	extern struct MenuItem *top_item;
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
@@ -154,18 +178,6 @@ void menu_finalize() {
 	if (bottom_item != NULL) {
 		lcd_set_cursor(0, 1);
 		lcd_puts(bottom_item->text);
-	}
-	
-	extern char *menu_password;
-	if (menu_password != NULL) {
-		lcd_clear();
-		lcd_set_cursor(0, 0);
-		lcd_puts("Password:");
-		lcd_set_cursor(0, 1);
-		lcd_puts("0000");
-		lcd_enable_cursor();
-		lcd_set_cursor(0, 1);
-		while (1) {};
 	}
 	
 	extern int menu_loop_running;

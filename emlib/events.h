@@ -15,6 +15,11 @@ void value_prev();
 void value_enter();
 void value_escape();
 
+void password_next();
+void password_prev();
+void password_enter();
+void password_escape();
+
 int _menu_has_next();
 int _menu_has_prev();
 int _menu_has_parent();
