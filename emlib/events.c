@@ -114,6 +114,14 @@ void menu_enter() {
 			button_pushed_event(MENU_ENTER_BUTTON, &MENU_BUTTONS_PIN, value_enter);
 			button_pushed_event(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN, value_escape);
 		}
+		lcd_disable_cursor();
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(top_item->text);
+		if (bottom_item != NULL) {
+			lcd_set_cursor(0, 1);
+			lcd_puts(bottom_item->text);
+		}
 		return;
 	}
 }
@@ -162,10 +170,14 @@ void value_prev() {
 
 void value_enter() {
 	extern int value_cursor_position;
+	extern int value_loop_running;
 	value_cursor_position++;
 	while (1) {
-		if (value_cursor_position > DISPLAY_ROW_SIZE - 1)
+		if (value_cursor_position > DISPLAY_ROW_SIZE - 1) {
 			value_cursor_position = 0;
+			value_loop_running = 0;
+			break;
+		}
 		if (isdigit(current_item->value[value_cursor_position])) {
 			lcd_set_cursor(value_cursor_position, 1);
 			break;
@@ -178,8 +190,11 @@ void value_escape() {
 	extern int value_cursor_position;
 	value_cursor_position--;
 	while (1) {
-		if (value_cursor_position < 0)
-			value_cursor_position = DISPLAY_ROW_SIZE - 1;
+		if (value_cursor_position < 0) {
+			value_cursor_position = 0;
+			value_loop_running = 0;
+			break;
+		}
 		if (isdigit(current_item->value[value_cursor_position])) {
 			lcd_set_cursor(value_cursor_position, 1);
 			break;
