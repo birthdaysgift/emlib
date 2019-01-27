@@ -30,12 +30,8 @@ void menu_next() {
 		if (current_item == bottom_item) {
 			top_item = bottom_item;
 			bottom_item = current_item = current_item->next;
-			//top_item->text[0] = ' ';
-			//bottom_item->text[0] = '>';
 		} else {
 			current_item = current_item->next;
-			//top_item->text[0] = ' ';
-			//bottom_item->text[0] = '>';
 		}
 		lcd_clear();
 		lcd_set_cursor(0, 0);
@@ -53,12 +49,8 @@ void menu_prev() {
 		if (current_item == top_item) {
 			bottom_item = top_item;
 			top_item = current_item = current_item->prev;
-			//top_item->text[0] = '>';
-			//bottom_item->text[0] = ' ';
 		} else {
 			current_item = current_item->prev;
-			//top_item->text[0] = '>';
-			//bottom_item->text[0] = ' ';
 		}
 		lcd_clear();
 		lcd_set_cursor(0, 0);
@@ -81,7 +73,6 @@ void menu_enter() {
 	if (_menu_has_child())	{
 		current_item = current_item->first_child;
 		top_item = current_item;
-		//top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();
@@ -133,7 +124,6 @@ void menu_escape() {
 	if (_menu_has_parent())	{
 		current_item = current_item->parent;
 		top_item = current_item;
-		//top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();

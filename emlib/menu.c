@@ -144,7 +144,6 @@ void menu_finalize() {
 	extern struct MenuItem *current_item;
 	
 	top_item = current_item;
-	//top_item->text[0] = '>';
 	bottom_item = current_item->next;
 	
 	lcd_clear();
