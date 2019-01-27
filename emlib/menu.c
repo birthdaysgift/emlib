@@ -39,69 +39,46 @@ void menu_init() {
 
 struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {
 	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, NULL);
-	_format_item_text(item);
 	return item;
 }
 
 struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuItem *prev) {
 	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, NULL);
-	_format_dir_text(item);
 	return item;
 }
 
 struct MenuItem *menu_add_action(char *text, struct MenuItem *parent, struct MenuItem *prev,
 								 void (*action)()) {
 	struct MenuItem *item = _menu_init_item(text, parent, prev, action, NULL);
-	_format_action_text(item);
 	return item;
 }
 
 struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct MenuItem *prev,
 								 char *value) {
 	struct MenuItem *item = _menu_init_item(text, parent, prev, NULL, value);
-	_format_item_text(item);
-	return item;									 
+	return item;
+}
+
+char *_get_formatted_text(struct MenuItem *item) {
+	extern struct MenuItem *current_item;
+	int i = 0, j = 0;
+	char *formatted_text = calloc(DISPLAY_ROW_SIZE, sizeof (char));
+	formatted_text[i++] = (item == current_item) ? '>' : ' ';
+	formatted_text[i++] = (item->parent == NULL) ? item->text[j++] : '/';
+	while (i < DISPLAY_ROW_SIZE && j < strlen(item->text))
+		formatted_text[i++] = item->text[j++];
+	if (item->first_child != NULL) {
+		if (strlen(item->text) > DISPLAY_ROW_SIZE - 1)
+			formatted_text[DISPLAY_ROW_SIZE - 1] = '/';
+		else
+			formatted_text[i] = '/';	
+	}
+	return formatted_text;
 }
 
 void menu_set_password(char *password) {
 	extern char *proper_password;
 	proper_password = password;
-}
-
-void _format_item_text(struct MenuItem *item) {
-	int raw_text_len = strlen(item->text);
-	int i = 0;
-	int j = 0;
-	char *formatted_text = calloc(DISPLAY_ROW_SIZE, sizeof (char));
-	formatted_text[i++] = ' ';
-	formatted_text[i++] = (item->parent == NULL) ? item->text[j++] : '/';
-	while (i < DISPLAY_ROW_SIZE && j < raw_text_len)
-		formatted_text[i++] = item->text[j++];
-	int result_text_len = i;
-	item->text = calloc(result_text_len, sizeof (char));
-	for (int k = 0; k < result_text_len && formatted_text[k] != 0; k++)
-		item->text[k] = formatted_text[k];
-}
-
-void _format_dir_text(struct MenuItem *item) {
-	_format_item_text(item);
-	int item_text_len = strlen(item->text);
-	if (item_text_len == DISPLAY_ROW_SIZE) {
-		item->text[item_text_len-1] = '/';
-	} else {
-		// Add '/' in the end of item->text
-		int dir_text_len = item_text_len + 1;
-		char *dir_text = calloc(dir_text_len, sizeof (char));
-		for (int i = 0; i < item_text_len; i++)
-			dir_text[i] = item->text[i];
-		dir_text[dir_text_len - 1] = '/';
-		item->text = calloc(dir_text_len, sizeof (char));
-		item->text = dir_text;
-	}
-}
-
-void _format_action_text(struct MenuItem *item) {
-	_format_item_text(item);
 }
 
 struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct MenuItem *prev,
@@ -167,17 +144,17 @@ void menu_finalize() {
 	extern struct MenuItem *current_item;
 	
 	top_item = current_item;
-	top_item->text[0] = '>';
+	//top_item->text[0] = '>';
 	bottom_item = current_item->next;
 	
 	lcd_clear();
 	
 	lcd_set_cursor(0, 0);
-	lcd_puts(top_item->text);
+	lcd_puts(_get_formatted_text(top_item));
 	
 	if (bottom_item != NULL) {
 		lcd_set_cursor(0, 1);
-		lcd_puts(bottom_item->text);
+		lcd_puts(_get_formatted_text(bottom_item));
 	}
 	
 	extern int menu_loop_running;

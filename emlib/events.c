@@ -30,18 +30,18 @@ void menu_next() {
 		if (current_item == bottom_item) {
 			top_item = bottom_item;
 			bottom_item = current_item = current_item->next;
-			top_item->text[0] = ' ';
-			bottom_item->text[0] = '>';
-			} else {
+			//top_item->text[0] = ' ';
+			//bottom_item->text[0] = '>';
+		} else {
 			current_item = current_item->next;
-			top_item->text[0] = ' ';
-			bottom_item->text[0] = '>';
+			//top_item->text[0] = ' ';
+			//bottom_item->text[0] = '>';
 		}
 		lcd_clear();
 		lcd_set_cursor(0, 0);
-		lcd_puts(top_item->text);
+		lcd_puts(_get_formatted_text(top_item));
 		lcd_set_cursor(0, 1);
-		lcd_puts(bottom_item->text);
+		lcd_puts(_get_formatted_text(bottom_item));
 	}
 }
 
@@ -53,18 +53,18 @@ void menu_prev() {
 		if (current_item == top_item) {
 			bottom_item = top_item;
 			top_item = current_item = current_item->prev;
-			top_item->text[0] = '>';
-			bottom_item->text[0] = ' ';
+			//top_item->text[0] = '>';
+			//bottom_item->text[0] = ' ';
 		} else {
 			current_item = current_item->prev;
-			top_item->text[0] = '>';
-			bottom_item->text[0] = ' ';
+			//top_item->text[0] = '>';
+			//bottom_item->text[0] = ' ';
 		}
 		lcd_clear();
 		lcd_set_cursor(0, 0);
-		lcd_puts(top_item->text);
+		lcd_puts(_get_formatted_text(top_item));
 		lcd_set_cursor(0, 1);
-		lcd_puts(bottom_item->text);
+		lcd_puts(_get_formatted_text(bottom_item));
 	}
 }
 
@@ -81,17 +81,17 @@ void menu_enter() {
 	if (_menu_has_child())	{
 		current_item = current_item->first_child;
 		top_item = current_item;
-		top_item->text[0] = '>';
+		//top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();
 		
 		lcd_set_cursor(0, 0);
-		lcd_puts(top_item->text);
+		lcd_puts(_get_formatted_text(top_item));
 		
 		if (bottom_item != NULL) {
 			lcd_set_cursor(0, 1);
-			lcd_puts(bottom_item->text);
+			lcd_puts(_get_formatted_text(bottom_item));
 		}
 		return;
 	}
@@ -99,7 +99,7 @@ void menu_enter() {
 	if (_menu_has_value()) {
 		lcd_clear();
 		lcd_set_cursor(0, 0);
-		lcd_puts(current_item->text);
+		lcd_puts(_get_formatted_text(current_item));
 		lcd_set_cursor(0, 1);
 		lcd_puts(current_item->value);
 		lcd_set_cursor(0, 1);
@@ -117,10 +117,10 @@ void menu_enter() {
 		lcd_disable_cursor();
 		lcd_clear();
 		lcd_set_cursor(0, 0);
-		lcd_puts(top_item->text);
+		lcd_puts(_get_formatted_text(top_item));
 		if (bottom_item != NULL) {
 			lcd_set_cursor(0, 1);
-			lcd_puts(bottom_item->text);
+			lcd_puts(_get_formatted_text(bottom_item));
 		}
 		return;
 	}
@@ -133,17 +133,17 @@ void menu_escape() {
 	if (_menu_has_parent())	{
 		current_item = current_item->parent;
 		top_item = current_item;
-		top_item->text[0] = '>';
+		//top_item->text[0] = '>';
 		bottom_item = current_item->next;
 		
 		lcd_clear();
 		
 		lcd_set_cursor(0, 0);
-		lcd_puts(current_item->text);
+		lcd_puts(_get_formatted_text(current_item));
 		
 		if (bottom_item != NULL) {
 			lcd_set_cursor(0, 1);
-			lcd_puts(bottom_item->text);
+			lcd_puts(_get_formatted_text(bottom_item));
 		}
 	}
 }

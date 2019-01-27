@@ -28,6 +28,8 @@ void menu_set_password(char *password);
 
 struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct MenuItem *prev,
 							     void (*action)(), char *value);
+
+char *_get_formatted_text(struct MenuItem *item);
 							   
 void _format_item_text(struct MenuItem *item);
 void _format_dir_text(struct MenuItem *item);
