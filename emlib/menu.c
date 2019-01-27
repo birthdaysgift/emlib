@@ -59,6 +59,54 @@ struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct Men
 	return item;
 }
 
+struct MenuItem *_get_config_item(char *path) {
+	extern struct MenuItem *current_item;
+	struct MenuItem *looking_item = _menu_item_malloc();
+		
+	looking_item = current_item;
+	while (looking_item->parent != NULL)
+	looking_item = looking_item->parent;
+	while (looking_item->prev != NULL)
+	looking_item = looking_item->prev;
+		
+	int i = 0, j = 0, k = 0;
+	while (j < strlen(path)) {
+		if (path[j] == '/') {
+			looking_item = looking_item->first_child;
+			i = 0;
+			j++;
+			k = j;
+			continue;
+		}
+		if (path[j] != looking_item->text[i]) {
+			if (looking_item->next == NULL) {
+				return NULL;
+				} else {
+				looking_item = looking_item->next;
+				j = k;
+				i = 0;
+				continue;
+			}
+		}
+		i++;
+		j++;
+	}
+	return looking_item;
+}
+
+char *menu_get_config_value(char *path) {
+	struct MenuItem *config_item = _menu_item_malloc();
+	config_item = _get_config_item(path);
+	return config_item->value;
+}
+
+void menu_set_config_value(char *path, char *value) {
+	struct MenuItem *config_item = _menu_item_malloc();
+	config_item = _get_config_item(path);
+	config_item->value = calloc(strlen(value), sizeof (char));
+	config_item->value = value;
+}
+
 char *_get_formatted_text(struct MenuItem *item) {
 	extern struct MenuItem *current_item;
 	int i = 0, j = 0;
