@@ -24,6 +24,8 @@ struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuIt
 struct MenuItem *menu_add_action(char *text, struct MenuItem *parent, struct MenuItem *prev, void (*action)());
 struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct MenuItem *prev, char *value);
 
+int menu_action_running();
+
 struct MenuItem *_get_config_item(char *path);
 char *menu_get_config_value(char *path);
 void menu_set_config_value(char *path, char *value);

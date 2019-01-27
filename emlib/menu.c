@@ -59,6 +59,10 @@ struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct Men
 	return item;
 }
 
+int menu_action_running() {
+		return bit_status(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN) == 1;
+}
+
 struct MenuItem *_get_config_item(char *path) {
 	extern struct MenuItem *current_item;
 	struct MenuItem *looking_item = _menu_item_malloc();
@@ -94,7 +98,7 @@ struct MenuItem *_get_config_item(char *path) {
 	return looking_item;
 }
 
-char *menu_get_config_value(char *path) {
+char *menu_get_config_value(char *path ) {
 	struct MenuItem *config_item = _menu_item_malloc();
 	config_item = _get_config_item(path);
 	return config_item->value;

@@ -66,7 +66,18 @@ void menu_enter() {
 	extern struct MenuItem *current_item;
 
 	if (_menu_has_action()) {
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(_get_formatted_text(current_item));
+		lcd_set_cursor(0, 1);
+		lcd_puts("Running...");
 		current_item->action();
+		lcd_clear();
+		lcd_set_cursor(0, 0);
+		lcd_puts(_get_formatted_text(top_item));
+		lcd_set_cursor(0, 1);
+		lcd_puts(_get_formatted_text(bottom_item));
+		while (bit_status(MENU_ESC_BUTTON, &MENU_BUTTONS_PIN) == 0) {}
 		return;
 	}
 	
