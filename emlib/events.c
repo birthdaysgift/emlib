@@ -26,7 +26,7 @@ void menu_next() {
 	extern struct MenuItem *top_item;
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
-	if (_menu_has_next()) {
+	if (current_item->next != NULL) {
 		if (current_item == bottom_item) {
 			top_item = bottom_item;
 			bottom_item = current_item = current_item->next;
@@ -45,7 +45,7 @@ void menu_prev() {
 	extern struct MenuItem *top_item;
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
-	if (_menu_has_prev()) {
+	if (current_item->prev != NULL) {
 		if (current_item == top_item) {
 			bottom_item = top_item;
 			top_item = current_item = current_item->prev;
@@ -65,7 +65,7 @@ void menu_enter() {
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
 
-	if (_menu_has_action()) {
+	if (current_item->action != NULL) {
 		lcd_clear();
 		lcd_set_cursor(0, 0);
 		lcd_puts(_get_formatted_text(current_item));
@@ -81,7 +81,7 @@ void menu_enter() {
 		return;
 	}
 	
-	if (_menu_has_child())	{
+	if (current_item->first_child != NULL)	{
 		current_item = current_item->first_child;
 		top_item = current_item;
 		bottom_item = current_item->next;
@@ -98,7 +98,7 @@ void menu_enter() {
 		return;
 	}
 	
-	if (_menu_has_value()) {
+	if (current_item->value != NULL) {
 		lcd_clear();
 		lcd_set_cursor(0, 0);
 		lcd_puts(_get_formatted_text(current_item));
@@ -132,7 +132,7 @@ void menu_escape() {
 	extern struct MenuItem *top_item;
 	extern struct MenuItem *bottom_item;
 	extern struct MenuItem *current_item;
-	if (_menu_has_parent())	{
+	if (current_item->parent != NULL)	{
 		current_item = current_item->parent;
 		top_item = current_item;
 		bottom_item = current_item->next;
@@ -298,34 +298,4 @@ void password_escape() {
 		}
 		value_cursor_position--;
 	}
-}
-
-int _menu_has_next() {
-	extern struct MenuItem *current_item;
-	return current_item->next != NULL;
-}
-
-int _menu_has_prev() {
-	extern struct MenuItem *current_item;
-	return current_item->prev != NULL;
-}
-
-int _menu_has_parent() {
-	extern struct MenuItem *current_item;
-	return current_item->parent != NULL;
-}
-
-int _menu_has_child() {
-	extern struct MenuItem *current_item;
-	return current_item->first_child != NULL;
-}
-
-int _menu_has_action() {
-	extern struct MenuItem *current_item;
-	return current_item->action != NULL;
-}
-
-int _menu_has_value() {
-	extern struct MenuItem *current_item;
-	return current_item->value != NULL;
 }
