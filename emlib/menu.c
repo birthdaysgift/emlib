@@ -21,9 +21,9 @@ void menu_init() {
 	lcd_init();
 	lcd_on();
 
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 	top_item = NULL;
 	bottom_item = NULL;
 	current_item = NULL;
@@ -37,20 +37,20 @@ void menu_init() {
 	current_password = "0000";
 }
 
-struct MenuItem *menu_add_item(char *text, struct MenuItem *parent, struct MenuItem *prev) {
+MenuItem *menu_add_item(char *text, MenuItem *parent, MenuItem *prev) {
 	return _menu_init_item(text, parent, prev, NULL, NULL);
 }
 
-struct MenuItem *menu_add_dir(char *text, struct MenuItem *parent, struct MenuItem *prev) {
+MenuItem *menu_add_dir(char *text, MenuItem *parent, MenuItem *prev) {
 	return _menu_init_item(text, parent, prev, NULL, NULL);
 }
 
-struct MenuItem *menu_add_action(char *text, struct MenuItem *parent, struct MenuItem *prev,
+MenuItem *menu_add_action(char *text, MenuItem *parent, MenuItem *prev,
 								 void (*action)()) {
 	return _menu_init_item(text, parent, prev, action, NULL);
 }
 
-struct MenuItem *menu_add_config(char *text, struct MenuItem *parent, struct MenuItem *prev,
+MenuItem *menu_add_config(char *text, MenuItem *parent, MenuItem *prev,
 								 char *value) {
 	return _menu_init_item(text, parent, prev, NULL, value);
 }
@@ -62,13 +62,13 @@ int menu_action_running() {
 
 
 char *menu_get_config_value(char *path ) {
-	struct MenuItem *config_item = _menu_item_malloc();
+	MenuItem *config_item = _menu_item_malloc();
 	config_item = _get_config_item(path);
 	return config_item->value;
 }
 
 void menu_set_config_value(char *path, char *value) {
-	struct MenuItem *config_item = _menu_item_malloc();
+	MenuItem *config_item = _menu_item_malloc();
 	config_item = _get_config_item(path);
 	config_item->value = calloc(strlen(value), sizeof (char));
 	config_item->value = value;
@@ -102,9 +102,9 @@ void menu_finalize() {
 		lcd_disable_cursor();
 	}
 	
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 	
 	top_item = current_item;
 	bottom_item = current_item->next;
@@ -129,9 +129,9 @@ void menu_finalize() {
 	}
 }
 
-struct MenuItem *_get_config_item(char *path) {
-	extern struct MenuItem *current_item;
-	struct MenuItem *looking_item = _menu_item_malloc();
+MenuItem *_get_config_item(char *path) {
+	extern MenuItem *current_item;
+	MenuItem *looking_item = _menu_item_malloc();
 	looking_item = current_item;
 	
 	while (looking_item->parent != NULL)
@@ -165,8 +165,8 @@ struct MenuItem *_get_config_item(char *path) {
 	return looking_item;
 }
 
-char *_get_formatted_text(struct MenuItem *item) {
-	extern struct MenuItem *current_item;
+char *_get_formatted_text(MenuItem *item) {
+	extern MenuItem *current_item;
 	int i = 0, j = 0;
 	char *formatted_text = calloc(DISPLAY_ROW_SIZE, sizeof (char));
 	formatted_text[i++] = (item == current_item) ? '>' : ' ';
@@ -182,15 +182,15 @@ char *_get_formatted_text(struct MenuItem *item) {
 	return formatted_text;
 }
 
-struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct MenuItem *prev,
+MenuItem *_menu_init_item(char *text, MenuItem *parent, MenuItem *prev,
 							     void (*action)(), char *value) {
 	// Remember it. It will be next for the new_item
-	struct MenuItem *next = NULL;
+	MenuItem *next = NULL;
 	if (prev != NULL && prev->next != NULL)
 		next = prev->next;
 	
 	// Initialize new_item
-	struct MenuItem *new_item = _menu_item_malloc();
+	MenuItem *new_item = _menu_item_malloc();
 	new_item->text = text;
 	new_item->parent = parent;
 	new_item->prev = prev;
@@ -217,6 +217,6 @@ struct MenuItem *_menu_init_item(char *text, struct MenuItem *parent, struct Men
 	return new_item;
 }
 
-struct MenuItem *_menu_item_malloc() {
-	return (struct MenuItem *) malloc(sizeof (struct MenuItem));
+MenuItem *_menu_item_malloc() {
+	return (MenuItem *) malloc(sizeof (MenuItem));
 }

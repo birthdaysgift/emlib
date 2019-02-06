@@ -23,9 +23,9 @@ void button_pushed_event(char button_bit, volatile uint8_t *button_register,
 }
 
 void menu_next() {
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 	if (current_item->next != NULL) {
 		if (current_item == bottom_item) {
 			top_item = bottom_item;
@@ -42,9 +42,9 @@ void menu_next() {
 }
 
 void menu_prev() {
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 	if (current_item->prev != NULL) {
 		if (current_item == top_item) {
 			bottom_item = top_item;
@@ -61,9 +61,9 @@ void menu_prev() {
 }
 
 void menu_enter() {
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 
 	if (current_item->action != NULL) {
 		lcd_clear();
@@ -129,9 +129,9 @@ void menu_enter() {
 }
 
 void menu_escape() {
-	extern struct MenuItem *top_item;
-	extern struct MenuItem *bottom_item;
-	extern struct MenuItem *current_item;
+	extern MenuItem *top_item;
+	extern MenuItem *bottom_item;
+	extern MenuItem *current_item;
 	if (current_item->parent != NULL)	{
 		current_item = current_item->parent;
 		top_item = current_item;
